@@ -24,4 +24,7 @@ data class Repo(
     val owner: Owner?,
 
     val stars: Int?,
+
+    @field:SerializedName("html_url")
+    val htmlUrl: String?
 )

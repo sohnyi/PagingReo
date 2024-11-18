@@ -1,5 +1,7 @@
 package com.sohnyi.pagingrepo
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -31,6 +33,10 @@ private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
 
+    private val repoAdapter by lazy {
+        RepoAdapter(::onReoClick)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -51,13 +57,12 @@ class MainActivity : AppCompatActivity() {
             MainViewModelFactory(this, RepoRepository())
         )[MainViewModel::class.java]
 
-        val adapter = RepoAdapter(::onReoClick)
-        val footerAdapter = LoadStateFooterAdapter { adapter.retry() }
-        val concatAdapter = adapter.withLoadStateFooter(footerAdapter)
+        val footerAdapter = LoadStateFooterAdapter { repoAdapter.retry() }
+        val concatAdapter = repoAdapter.withLoadStateFooter(footerAdapter)
         binding.initUI(concatAdapter)
 
         binding.bindSearch(viewModel.action)
-        binding.bindList(adapter, viewModel.reposFlow)
+        binding.bindList(repoAdapter, viewModel.reposFlow)
 
     }
 
@@ -124,9 +129,18 @@ class MainActivity : AppCompatActivity() {
                 layoutError.isVisible = state.source.refresh is LoadState.Error
             }
         }
+
+        btnRetry.setOnClickListener { adapter.retry() }
     }
 
     private fun onReoClick(position: Int) {
-
+        try {
+            val repo = repoAdapter.peek(position) ?: return
+            val url = repo.htmlUrl ?: return
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(browserIntent)
+        } catch (e: Exception) {
+            Log.e(TAG, "onReoClick: ERROR!", e)
+        }
     }
 }
