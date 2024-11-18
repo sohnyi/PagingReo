@@ -12,4 +12,6 @@ object Constant {
     const val READ_TIMEOUT = 20L
 
     const val WRITE_TIMEOUT = 30L
+
+    const val GITHUB_TOKEN = "Bearer YOUR-TOKEN"
 }
