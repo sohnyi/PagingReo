@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName
 data class Owner(
     val id: Long?,
 
+    val login: String?,
+
     @field:SerializedName("avatar_url")
     val avatarUrl: String?,
 

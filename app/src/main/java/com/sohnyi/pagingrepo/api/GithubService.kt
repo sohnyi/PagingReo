@@ -11,6 +11,7 @@ interface GithubService {
     suspend fun getRepos(
         @Path("userName") userName: String,
         @Query("page") page: Int,
-        @Query("per_page") perPage: Int
+        @Query("per_page") perPage: Int,
+        @Query("sort") sort: String = ":stars"
     ): List<Repo>
 }

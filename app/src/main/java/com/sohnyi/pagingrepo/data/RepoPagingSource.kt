@@ -5,6 +5,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sohnyi.pagingrepo.api.GithubService
 import com.sohnyi.pagingrepo.model.Repo
+import retrofit2.HttpException
 
 private const val TAG = "RepoPagingSource"
 
@@ -22,6 +23,7 @@ class RepoPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Repo> {
 
         Log.i(TAG, "load: params.key = ${params.key}")
+        Log.i(TAG, "load: thread name: ${Thread.currentThread().name}")
 
         val page = params.key ?: FIRST_PAGE_INDEX
 
@@ -42,7 +44,19 @@ class RepoPagingSource(
                 nextKey = nextPage,
                 prevKey = prevPage
             )
+        } catch (e: HttpException) {
+            Log.e(TAG, "load: ERROR!", e)
+            return if (e.code() == 404) {
+                LoadResult.Page(
+                    data = emptyList(),
+                    prevKey = null,
+                    nextKey = null
+                )
+            } else {
+                LoadResult.Error(e)
+            }
         } catch (e: Exception) {
+            Log.e(TAG, "load: ERROR!", e)
             return LoadResult.Error(e)
         }
     }

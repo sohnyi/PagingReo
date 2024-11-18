@@ -49,6 +49,14 @@ object NetworkRepository : INetworkRepository {
             .writeTimeout(Constant.WRITE_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(Constant.READ_TIMEOUT, TimeUnit.SECONDS)
             .addInterceptor(logInterceptor)
+            // add Header
+            .addInterceptor { chain ->
+                val originalRequest = chain.request()
+                val newRequest = originalRequest.newBuilder()
+                    .addHeader("Accept", "application/json")
+                    .build()
+                chain.proceed(newRequest)
+            }
             .build()
     }
 }
