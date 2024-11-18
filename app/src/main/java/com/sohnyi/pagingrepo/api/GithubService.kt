@@ -12,6 +12,5 @@ interface GithubService {
         @Path("userName") userName: String,
         @Query("page") page: Int,
         @Query("per_page") perPage: Int,
-        @Query("sort") sort: String = ":stars"
     ): List<Repo>
 }

@@ -31,7 +31,7 @@ class RepoHolder(private val binging: ItemRepoBinding) : ViewHolder(binging.root
         binging.tvName.text = repo.name ?: ""
         binging.tvDesc.text = repo.description ?: ""
 
-        binging.tvStarCount.text = (repo.stars ?: 0).toString()
+        binging.tvStarCount.text = (repo.stargazersCount ?: 0).toString()
         binging.tvLanguage.text = repo.language ?: ""
     }
 

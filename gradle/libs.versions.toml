@@ -10,6 +10,7 @@ material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.2.0"
 ksp = "1.9.25-1.0.20"
+kapt = "1.9.23"
 
 #coroutines
 coroutines = "1.9.0"
@@ -57,4 +58,5 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "gl
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlinKapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kapt" }
 

@@ -58,6 +58,7 @@ dependencies {
 
     implementation(libs.paging3)
 
+    implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.complie)
     implementation(libs.room.paging)

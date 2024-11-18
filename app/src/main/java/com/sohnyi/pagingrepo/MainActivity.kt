@@ -17,9 +17,12 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sohnyi.pagingrepo.api.GithubService
 import com.sohnyi.pagingrepo.data.RepoRepository
+import com.sohnyi.pagingrepo.database.RepoDatabase
 import com.sohnyi.pagingrepo.databinding.ActivityMainBinding
 import com.sohnyi.pagingrepo.model.Repo
+import com.sohnyi.pagingrepo.network.NetworkRepository
 import com.sohnyi.pagingrepo.ui.adapter.LoadStateFooterAdapter
 import com.sohnyi.pagingrepo.ui.adapter.RepoAdapter
 import com.sohnyi.pagingrepo.viewmodel.MainViewModel
@@ -54,7 +57,12 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel = ViewModelProvider(
             this,
-            MainViewModelFactory(this, RepoRepository())
+            MainViewModelFactory(
+                this, RepoRepository(
+                    NetworkRepository.obtainRetrofitService(GithubService::class.java),
+                    RepoDatabase.getInstance(this)
+                )
+            )
         )[MainViewModel::class.java]
 
         val footerAdapter = LoadStateFooterAdapter { repoAdapter.retry() }
@@ -120,13 +128,13 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             adapter.loadStateFlow.collect { state ->
-                progressCircular.isVisible = state.source.refresh is LoadState.Loading
-                val isEmpty = state.source.refresh is LoadState.NotLoading && adapter.itemCount == 0
+                progressCircular.isVisible = state.mediator?.refresh is LoadState.Loading
+                val isEmpty = state.refresh is LoadState.NotLoading && adapter.itemCount == 0
                 tvEmpty.isVisible = isEmpty
                 rvRepos.isVisible = !isEmpty
 
 
-                layoutError.isVisible = state.source.refresh is LoadState.Error
+                layoutError.isVisible = state.refresh is LoadState.Error && adapter.itemCount == 0
             }
         }
 

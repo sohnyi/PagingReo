@@ -48,7 +48,7 @@ class MainViewModel(
     }
 
     private fun getRepos(userName: String): Flow<PagingData<Repo>> {
-        return repository.getReposStream(userName)
+        return repository.getReposStream2(userName)
     }
 
 }
