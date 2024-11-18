@@ -1,10 +1,14 @@
 package com.sohnyi.pagingrepo.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 
+@Entity(tableName = "repos")
 data class Repo(
-    val id: Long?,
+    @PrimaryKey
+    val id: String,
 
     val name: String?,
 
@@ -26,5 +30,5 @@ data class Repo(
     val stars: Int?,
 
     @field:SerializedName("html_url")
-    val htmlUrl: String?
+    val htmlUrl: String?,
 )

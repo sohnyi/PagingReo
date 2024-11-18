@@ -9,6 +9,7 @@ import retrofit2.HttpException
 
 private const val TAG = "RepoPagingSource"
 
+@Deprecated("Replace by RepoRemoteMediator")
 class RepoPagingSource(
     private val userName: String,
     private val service: GithubService,
@@ -37,7 +38,7 @@ class RepoPagingSource(
             val prevPage = if (page == FIRST_PAGE_INDEX) {
                 null
             } else {
-                page -1
+                page - 1
             }
             return LoadResult.Page(
                 data = repos,
