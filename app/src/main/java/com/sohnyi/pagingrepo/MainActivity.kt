@@ -21,13 +21,13 @@ import com.sohnyi.pagingrepo.api.GithubService
 import com.sohnyi.pagingrepo.data.RepoRepository
 import com.sohnyi.pagingrepo.database.RepoDatabase
 import com.sohnyi.pagingrepo.databinding.ActivityMainBinding
-import com.sohnyi.pagingrepo.model.Repo
 import com.sohnyi.pagingrepo.network.NetworkRepository
 import com.sohnyi.pagingrepo.ui.adapter.LoadStateFooterAdapter
 import com.sohnyi.pagingrepo.ui.adapter.RepoAdapter
 import com.sohnyi.pagingrepo.viewmodel.MainViewModel
 import com.sohnyi.pagingrepo.viewmodel.MainViewModelFactory
 import com.sohnyi.pagingrepo.viewmodel.UiAction
+import com.sohnyi.pagingrepo.viewmodel.UiModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -118,11 +118,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun ActivityMainBinding.bindList(
         adapter: RepoAdapter,
-        repos: Flow<PagingData<Repo>>,
+        repos: Flow<PagingData<UiModel>>,
     ) {
         lifecycleScope.launch {
-            repos.collectLatest {
-                adapter.submitData(it)
+            repos.collectLatest { pagingData: PagingData<UiModel> ->
+                adapter.submitData(pagingData)
             }
         }
 
@@ -143,10 +143,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun onReoClick(position: Int) {
         try {
-            val repo = repoAdapter.peek(position) ?: return
-            val url = repo.htmlUrl ?: return
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            startActivity(browserIntent)
+            val uiModel = repoAdapter.peek(position) ?: return
+            if (uiModel is UiModel.RepoItem) {
+                val url = uiModel.repo.htmlUrl ?: return
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(browserIntent)
+            }
         } catch (e: Exception) {
             Log.e(TAG, "onReoClick: ERROR!", e)
         }
