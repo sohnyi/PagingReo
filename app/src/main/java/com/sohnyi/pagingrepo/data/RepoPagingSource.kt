@@ -17,7 +17,7 @@ class RepoPagingSource(
     override fun getRefreshKey(state: PagingState<Int, Repo>): Int? {
         val position = state.anchorPosition ?: return null
         val page = state.closestPageToPosition(position) ?: return null
-        val refreshKey =  page.prevKey?.plus(1) ?: page.nextKey?.minus(1)
+        val refreshKey = page.prevKey?.plus(1) ?: page.nextKey?.minus(1)
         Log.i(TAG, "getRefreshKey: refreshKey = $refreshKey")
         return refreshKey
     }
@@ -38,19 +38,13 @@ class RepoPagingSource(
             val prevPage = if (page == FIRST_PAGE_INDEX) {
                 null
             } else {
-                page -1
+                page - 1
             }
-            if (page > 9) {
-                return LoadResult.Invalid()
-            } else {
-
-
-                return LoadResult.Page(
-                    data = repos,
-                    nextKey = nextPage,
-                    prevKey = prevPage
-                )
-            }
+            return LoadResult.Page(
+                data = repos,
+                nextKey = nextPage,
+                prevKey = prevPage
+            )
         } catch (e: HttpException) {
             Log.e(TAG, "load: ERROR!", e)
             return if (e.code() == 404) {
