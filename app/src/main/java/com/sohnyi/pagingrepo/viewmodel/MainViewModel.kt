@@ -53,8 +53,8 @@ class MainViewModel(
             }
             .map {
                 it.insertSeparators { before, after ->
-                    val beforeFirstLetter = before?.repo?.name?.first()?.uppercase()
-                    val afterFirstLetter = after?.repo?.name?.first()?.uppercase()
+                    val beforeFirstLetter = before?.repo?.name?.firstOrNull()?.uppercase()
+                    val afterFirstLetter = after?.repo?.name?.firstOrNull()?.uppercase()
                     if (beforeFirstLetter == null) {
                         if (firstItem == null) {
                             firstItem = before
