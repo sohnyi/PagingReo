@@ -13,7 +13,7 @@ class RepoAdapter(private val onItemClick: (position: Int) -> Unit) : PagingData
     }
 
     override fun onBindViewHolder(holder: RepoHolder, position: Int) {
-        val repo = getItem(position) ?: return
+        val repo = getItem(position)
         holder.bind(repo)
     }
 

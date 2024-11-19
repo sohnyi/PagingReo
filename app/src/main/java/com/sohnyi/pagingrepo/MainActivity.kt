@@ -15,12 +15,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
-import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sohnyi.pagingrepo.data.RepoRepository
 import com.sohnyi.pagingrepo.databinding.ActivityMainBinding
 import com.sohnyi.pagingrepo.model.Repo
-import com.sohnyi.pagingrepo.ui.adapter.LoadStateFooterAdapter
 import com.sohnyi.pagingrepo.ui.adapter.RepoAdapter
 import com.sohnyi.pagingrepo.viewmodel.MainViewModel
 import com.sohnyi.pagingrepo.viewmodel.MainViewModelFactory
@@ -57,9 +55,9 @@ class MainActivity : AppCompatActivity() {
             MainViewModelFactory(this, RepoRepository())
         )[MainViewModel::class.java]
 
-        val footerAdapter = LoadStateFooterAdapter { repoAdapter.retry() }
-        val concatAdapter = repoAdapter.withLoadStateFooter(footerAdapter)
-        binding.initUI(concatAdapter)
+//        val footerAdapter = LoadStateFooterAdapter { repoAdapter.retry() }
+//        val concatAdapter = repoAdapter.withLoadStateFooter(footerAdapter)
+        binding.initUI(repoAdapter)
 
         binding.bindSearch(viewModel.action)
         binding.bindList(repoAdapter, viewModel.reposFlow)
@@ -67,7 +65,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun ActivityMainBinding.initUI(adapter: ConcatAdapter) {
+    private fun ActivityMainBinding.initUI(adapter: RepoAdapter) {
         rvRepos.adapter = adapter
         rvRepos.layoutManager = LinearLayoutManager(this@MainActivity)
     }

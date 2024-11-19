@@ -18,8 +18,7 @@ class RepoRepository {
         return Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
-                enablePlaceholders = false,
-                maxSize = 8 * PAGE_SIZE
+                enablePlaceholders = true
             ),
             pagingSourceFactory = { RepoPagingSource(userName, service) }
         ).flow

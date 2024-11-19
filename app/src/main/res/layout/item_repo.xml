@@ -100,4 +100,25 @@
         app:layout_constraintBaseline_toBaselineOf="@id/tv_language"
         app:layout_constraintEnd_toStartOf="@id/tv_language" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="iv_avatar, tv_name, tv_username, tv_desc, tv_star_count, iv_star, tv_language, tv_language_title" />
+
+    <FrameLayout
+        android:id="@+id/layout_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_circular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true" />
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,8 @@ import retrofit2.HttpException
 
 private const val TAG = "RepoPagingSource"
 
+private const val MOCK_TOTAL_SIZE = 300
+
 class RepoPagingSource(
     private val userName: String,
     private val service: GithubService,
@@ -30,7 +32,11 @@ class RepoPagingSource(
 
         try {
             val repos = service.getRepos(userName, page, params.loadSize)
-            val nextPage = if (repos.isNotEmpty()) {
+            val newCount = repos.size
+            val itemsBefore = (page - 1) * params.loadSize
+            val itemsAfter = MOCK_TOTAL_SIZE - (itemsBefore + newCount)
+
+            val nextPage = if (repos.isNotEmpty() && itemsAfter > 0) {
                 page + 1
             } else {
                 null
@@ -43,7 +49,9 @@ class RepoPagingSource(
             return LoadResult.Page(
                 data = repos,
                 nextKey = nextPage,
-                prevKey = prevPage
+                prevKey = prevPage,
+                itemsBefore = itemsBefore,
+                itemsAfter = itemsAfter
             )
         } catch (e: HttpException) {
             Log.e(TAG, "load: ERROR!", e)
