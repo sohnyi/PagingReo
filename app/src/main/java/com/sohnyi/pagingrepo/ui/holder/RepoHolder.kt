@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.sohnyi.pagingrepo.R
 import com.sohnyi.pagingrepo.databinding.ItemRepoBinding
 import com.sohnyi.pagingrepo.model.Repo
 
@@ -25,6 +26,8 @@ class RepoHolder(private val binging: ItemRepoBinding) : ViewHolder(binging.root
             .override(binging.ivAvatar.width, binging.ivAvatar.height)
             .apply(RequestOptions.circleCropTransform())
             .into(binging.ivAvatar)
+
+        binging.tvPosition.text = itemView.context.getString(R.string.format_position, absoluteAdapterPosition + 1)
 
         binging.tvUsername.text = repo.owner?.login ?: " "
 

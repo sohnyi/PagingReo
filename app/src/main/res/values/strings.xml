@@ -4,4 +4,5 @@
     <string name="hint_input_user_name">Input the username</string>
     <string name="there_are_no_results">There are no results!</string>
     <string name="retry">Retry</string>
+    <string name="format_position">%1$03d</string>
 </resources>
