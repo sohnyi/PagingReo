@@ -36,7 +36,6 @@ class MainViewModel(
             .distinctUntilChanged()
             .onStart { emit(UiAction.Search(userName = DEFAULT_USERNAME)) }
 
-        var firstItem: UiModel.RepoItem? = null
         reposFlow = getRepos
             .filterIsInstance<UiAction.Search>()
             .flatMapLatest {
@@ -44,26 +43,16 @@ class MainViewModel(
             }
             .map { pagingData ->
                 pagingData.map { repo ->
-                    UiModel.RepoItem(repo).also {
-                        if (firstItem == null) {
-                            firstItem = it
-                        }
-                    }
+                    UiModel.RepoItem(repo)
                 }
             }
             .map {
                 it.insertSeparators { before, after ->
+                    // 当前一个首字母和下一个不相同时插入一个首字母分隔符
                     val beforeFirstLetter = before?.repo?.name?.firstOrNull()?.uppercase()
                     val afterFirstLetter = after?.repo?.name?.firstOrNull()?.uppercase()
-                    if (beforeFirstLetter == null) {
-                        if (firstItem == null) {
-                            firstItem = before
-                        }
-                        return@insertSeparators null
-                    }
-                    if (afterFirstLetter == null) {
-                        return@insertSeparators null
-                    }
+                        ?: return@insertSeparators null
+
                     if (beforeFirstLetter != afterFirstLetter) {
                         UiModel.LetterItem(afterFirstLetter)
                     } else {
