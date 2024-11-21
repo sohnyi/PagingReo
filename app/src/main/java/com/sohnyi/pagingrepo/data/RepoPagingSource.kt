@@ -9,7 +9,6 @@ import retrofit2.HttpException
 
 private const val TAG = "RepoPagingSource"
 
-private const val MOCK_TOTAL_SIZE = 300
 
 class RepoPagingSource(
     private val userName: String,
@@ -34,9 +33,9 @@ class RepoPagingSource(
             val repos = service.getRepos(userName, page, params.loadSize)
             val newCount = repos.size
             val itemsBefore = (page - 1) * params.loadSize
-            val itemsAfter = MOCK_TOTAL_SIZE - (itemsBefore + newCount)
+            val itemsAfter = if (newCount > 0) params.loadSize else 0
 
-            val nextPage = if (repos.isNotEmpty() && itemsAfter > 0) {
+            val nextPage = if (repos.isNotEmpty() ) {
                 page + 1
             } else {
                 null
@@ -54,7 +53,7 @@ class RepoPagingSource(
                 itemsAfter = itemsAfter
             )
         } catch (e: HttpException) {
-            Log.e(TAG, "load: ERROR!", e)
+            Log.e(TAG, "load: HttpException! code = ${e.code()}", e)
             return if (e.code() == 404) {
                 LoadResult.Page(
                     data = emptyList(),
@@ -65,7 +64,7 @@ class RepoPagingSource(
                 LoadResult.Error(e)
             }
         } catch (e: Exception) {
-            Log.e(TAG, "load: ERROR!", e)
+            Log.e(TAG, "load: ERROR!, ${e.stackTraceToString()}", e)
             return LoadResult.Error(e)
         }
     }

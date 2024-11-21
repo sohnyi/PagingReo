@@ -22,22 +22,27 @@ class MainViewModel(
     private val repository: RepoRepository,
 ) : ViewModel() {
 
+    // 暴露给 UI 层的 Flow
     val reposFlow: Flow<PagingData<Repo>>
 
      val action: (UiAction) -> Unit
 
     init {
         val actionStateFlow = MutableSharedFlow<UiAction>()
+
         val getRepos = actionStateFlow
             .filterIsInstance<UiAction.Search>()
             .distinctUntilChanged()
-            .onStart { emit(UiAction.Search(userName = DEFAULT_USERNAME)) }
+            .onStart {
+                // 开始时加载默认数据
+                emit(UiAction.Search(userName = DEFAULT_USERNAME))
+            }
 
         reposFlow = getRepos
-            .filterIsInstance<UiAction.Search>()
             .flatMapLatest {
                 getRepos(userName = it.userName)
             }
+            // 缓存 pagingData
             .cachedIn(viewModelScope)
 
         action = { action ->
@@ -47,6 +52,9 @@ class MainViewModel(
         }
     }
 
+    /**
+     * 获取仓库列表数据流
+     */
     private fun getRepos(userName: String): Flow<PagingData<Repo>> {
         return repository.getReposStream(userName)
     }

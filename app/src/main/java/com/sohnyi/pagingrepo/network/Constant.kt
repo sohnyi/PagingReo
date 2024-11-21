@@ -11,5 +11,6 @@ object Constant {
     // 读取超时时间
     const val READ_TIMEOUT = 20L
 
+    // 写入超时时间
     const val WRITE_TIMEOUT = 30L
 }

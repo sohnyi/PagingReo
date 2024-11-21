@@ -14,15 +14,15 @@ class LoadStateFooterHolder(
 
 
     fun bind(state: LoadState) {
-
+        // 加载中
         binding.progressBar.isVisible = state is LoadState.Loading
-
+        // 出错按钮
         binding.btnRetry.isVisible = state is LoadState.Error
-        binding.tvErrorMsg.isVisible = state is LoadState.Error
+        // 出错信息
         if (state is LoadState.Error) {
             binding.tvErrorMsg.text = state.error.message
         }
-
+        // 出错按钮点击事件
         binding.btnRetry.setOnClickListener {
             retry()
         }

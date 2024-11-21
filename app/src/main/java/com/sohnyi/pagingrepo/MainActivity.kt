@@ -15,10 +15,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sohnyi.pagingrepo.api.GithubService
 import com.sohnyi.pagingrepo.data.RepoRepository
 import com.sohnyi.pagingrepo.databinding.ActivityMainBinding
 import com.sohnyi.pagingrepo.model.Repo
+import com.sohnyi.pagingrepo.network.NetworkRepository
+import com.sohnyi.pagingrepo.ui.adapter.LoadStateFooterAdapter
 import com.sohnyi.pagingrepo.ui.adapter.RepoAdapter
 import com.sohnyi.pagingrepo.viewmodel.MainViewModel
 import com.sohnyi.pagingrepo.viewmodel.MainViewModelFactory
@@ -50,14 +54,17 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        val service = NetworkRepository.obtainRetrofitService(GithubService::class.java)
         val viewModel = ViewModelProvider(
             this,
-            MainViewModelFactory(this, RepoRepository())
+            MainViewModelFactory(this, RepoRepository(service))
         )[MainViewModel::class.java]
 
-//        val footerAdapter = LoadStateFooterAdapter { repoAdapter.retry() }
-//        val concatAdapter = repoAdapter.withLoadStateFooter(footerAdapter)
-        binding.initUI(repoAdapter)
+        // 页脚适配器
+        val footerAdapter = LoadStateFooterAdapter { repoAdapter.retry() }
+        // 组合后的适配器
+        val concatAdapter = repoAdapter.withLoadStateFooter(footerAdapter)
+        binding.initUI(concatAdapter)
 
         binding.bindSearch(viewModel.action)
         binding.bindList(repoAdapter, viewModel.reposFlow)
@@ -65,7 +72,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun ActivityMainBinding.initUI(adapter: RepoAdapter) {
+    private fun ActivityMainBinding.initUI(adapter: ConcatAdapter) {
         rvRepos.adapter = adapter
         rvRepos.layoutManager = LinearLayoutManager(this@MainActivity)
     }
@@ -123,12 +130,15 @@ class MainActivity : AppCompatActivity() {
                 tvEmpty.isVisible = isEmpty
                 rvRepos.isVisible = !isEmpty
 
+                if (state.hasError) {
+                    layoutError.isVisible = state.source.refresh is LoadState.Error
+                    btnRetry.setOnClickListener { adapter.retry() }
+                } else {
+                    layoutError.isVisible = false
+                }
 
-                layoutError.isVisible = state.source.refresh is LoadState.Error
             }
         }
-
-        btnRetry.setOnClickListener { adapter.retry() }
     }
 
     private fun onReoClick(position: Int) {

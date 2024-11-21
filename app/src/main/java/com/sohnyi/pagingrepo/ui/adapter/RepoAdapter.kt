@@ -6,7 +6,12 @@ import androidx.recyclerview.widget.DiffUtil
 import com.sohnyi.pagingrepo.model.Repo
 import com.sohnyi.pagingrepo.ui.holder.RepoHolder
 
-class RepoAdapter(private val onItemClick: (position: Int) -> Unit) : PagingDataAdapter<Repo, RepoHolder>(DiffCallback) {
+/**
+ * 仓库列表适配器
+ */
+class RepoAdapter(
+    private val onItemClick: (position: Int) -> Unit
+) : PagingDataAdapter<Repo, RepoHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoHolder {
         return RepoHolder.create(parent, onItemClick)
@@ -17,7 +22,9 @@ class RepoAdapter(private val onItemClick: (position: Int) -> Unit) : PagingData
         holder.bind(repo)
     }
 
-
+    /**
+     *
+     */
     private object DiffCallback : DiffUtil.ItemCallback<Repo>() {
         override fun areItemsTheSame(oldItem: Repo, newItem: Repo): Boolean {
             return oldItem.id == newItem.id
@@ -26,6 +33,5 @@ class RepoAdapter(private val onItemClick: (position: Int) -> Unit) : PagingData
         override fun areContentsTheSame(oldItem: Repo, newItem: Repo): Boolean {
             return oldItem == newItem
         }
-
     }
 }
