@@ -52,8 +52,6 @@ class RepoRemoteMediator(
                     database.repoDao().clearRepos()
                     database.remoteKeysDao().clearRemoteKeys()
                 }
-                val reposSize = database.repoDao().getAll().size
-                Log.i(TAG, "load: reposSize: $reposSize")
                 val prevKey = if (page == FIRST_PAGE_INDEX) null else page - 1
                 val nextPage = if (endOfPaginationReached) null else page + 1
                 val keys = repos.map {
