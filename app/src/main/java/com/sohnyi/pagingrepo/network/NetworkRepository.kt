@@ -54,7 +54,7 @@ object NetworkRepository : INetworkRepository {
                 val originalRequest = chain.request()
                 val newRequest = originalRequest.newBuilder()
                     .addHeader("Accept", "application/json")
-                    .addHeader("Authorization", "token ${Constant.GITHUB_TOKEN}")
+//                    .addHeader("Authorization", "token ${Constant.GITHUB_TOKEN}")
                     .build()
                 chain.proceed(newRequest)
             }
